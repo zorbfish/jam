@@ -16,6 +16,7 @@ class Screen {
 
     turn_on()
     listen_to_menu()
+    listen_to_mouse(this)
   }
 
   function is_on():Boolean {
@@ -65,6 +66,45 @@ class Screen {
 
   private function listen_to_menu() {
     smenu.addListener(this)
+  }
+  
+  private function listen_to_mouse(screen) {
+    var hold_delay:Number = 2000 // milliseconds
+    var menu_timer:Number = 0
+    var timer_running:Boolean = false
+
+    Mouse.addListener({
+      onMouseDown: function() {
+        if (screen.is_on()) {
+          menu_timer = setInterval(
+            function() {
+              screen.show_menu()
+              clearInterval(menu_timer)
+            }, hold_delay)
+          timer_running = true
+        }
+
+        screen.touched(_root._xmouse, _root._ymouse)
+      },
+
+      onMouseMove: function() {
+        if (timer_running) {
+          clearInterval(menu_timer)
+          timer_running = false
+        }
+
+        screen.moved(_root._xmouse, _root._ymouse)
+      },
+
+      onMouseUp: function() {
+        if (timer_running) {
+          clearInterval(menu_timer)
+          timer_running = false
+        }
+
+        screen.released(_root._xmouse, _root._ymouse)
+      }
+    })
   }
 
   private function menu_closed() {
