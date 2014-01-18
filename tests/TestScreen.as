@@ -1,5 +1,7 @@
 class TestScreen extends leanUnit.TestCase {
 
+  function no_op() {}
+
   function new_feedback_stub():Object {
     var respond = function(feedback) {
       return function(x, y) {
@@ -73,5 +75,41 @@ class TestScreen extends leanUnit.TestCase {
     screen.touched(0, 0) // Remember, touch turns the screen on!
 
     assertEqual(ui.feedback, 'None')
+  }
+
+  function test_when_menu_is_not_visible_it_receives_no_feedback() {
+    var smenu = new_feedback_stub()
+    var screen = new Screen({}, smenu)
+
+    // Menu must be explicitly shown with show_menu()
+
+    screen.touched(0, 0)
+    screen.moved(0, 0)
+    screen.released(0, 0)
+
+    assertEqual(smenu.feedback, 'None')
+  }
+
+  function test_when_menu_visible_ui_receives_no_feedback() {
+    var ui = new_feedback_stub()
+    var screen = new Screen(ui, {})
+
+    screen.show_menu()
+
+    screen.touched(0, 0)
+    screen.moved(0, 0)
+    screen.released(0, 0)
+
+    assertEqual(ui.feedback, 'None')
+  }
+
+  function test_when_menu_closed_screen_is_notified() {
+    var smenu = new ScreenMenu(no_op)
+    var screen = new Screen({}, smenu)
+
+    screen.show_menu()
+    smenu.close()
+
+    assertFalse(screen.menu_is_visible())
   }
 }
