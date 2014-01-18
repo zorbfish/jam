@@ -22,7 +22,7 @@ class Screen {
     return ui_visible
   }
 
-  function menu_is_visible():Boolean {
+  function menu_has_focus():Boolean {
     return smenu_has_focus
   }
 
@@ -32,6 +32,8 @@ class Screen {
   }
 
   function turn_off() {
+    ui.hide()
+    smenu.hide()
     ui_visible = false
   }
 
@@ -71,5 +73,9 @@ class Screen {
 
   private function turn_on() {
     ui_visible = true
+    ui.show()
+    if (smenu_has_focus) {
+      smenu.show()
+    }
   }
 }
