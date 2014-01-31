@@ -15,7 +15,7 @@ class Screen {
     this.smenu = smenu
 
     turn_on()
-    listen_to_menu()
+    smenu.notify_on_close(this)
     listen_to_mouse(this)
   }
 
@@ -64,10 +64,6 @@ class Screen {
     }
   }
 
-  private function listen_to_menu() {
-    smenu.addListener(this)
-  }
-  
   private function listen_to_mouse(screen) {
     var hold_delay:Number = 2000 // milliseconds
     var menu_timer:Number = 0
