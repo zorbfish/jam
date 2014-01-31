@@ -25,7 +25,7 @@ module ::Guard
   private
 
     def all_tests
-      Dir.glob('tests/**/Test*.as').map do |file_name|
+      Dir.glob('tests/**/*Tests.as').map do |file_name|
         File.basename(file_name, File.extname(file_name))
       end
     end
@@ -87,6 +87,6 @@ BODY
 end
 
 guard :LeanUnit do
-  watch(%r{^src/(.+)\.as$}) { |m| "Test#{m[1]}" }
-  watch(%r{^tests/(Test.+)\.as$}) { |m| m[1] } 
+  watch(%r{^src/(.+)\.as$}) { |m| "#{m[1]}Tests" }
+  watch(%r{^tests/(.+Tests)\.as$}) { |m| m[1] } 
 end

@@ -1,4 +1,4 @@
-class TestScreen extends leanUnit.TestCase {
+class ScreenTests extends leanUnit.TestCase {
 
   function no_op() {}
 
