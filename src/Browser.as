@@ -3,7 +3,11 @@ Browser navigates the music collection and modifies the selected playlist
 */
 class Browser {
 
+  private static var BROWSING_ALBUMS = 0
+
+  private var location:Number
   private var collection:Object
+  private var playlist:Object
   private var page:Array
   private var page_length:Number
   private var paginator:PagedArray
@@ -11,8 +15,10 @@ class Browser {
   private var addListener:Function
   private var broadcastMessage:Function
 
-  function Browser(page_length:Number, collection:Object) {
+  function Browser(page_length:Number, collection:Object, playlist:Object) {
+    this.location = Browser.BROWSING_ALBUMS
     this.collection = collection
+    this.playlist = playlist
     this.page = new Array(page_length)
     this.page_length = page_length
     this.paginator = new PagedArray(page_length, collection.albums())
@@ -22,7 +28,23 @@ class Browser {
   }
 
   function add_index(idx:Number) {
-    revert_paged_index(idx)
+    var real_idx = revert_paged_index(idx)
+    switch (location) {
+      case Browser.BROWSING_ALBUMS:
+        var tracks = collection.get_tracks_from_album(real_idx)
+        playlist.add_tracks(tracks)
+      break
+    }
+  }
+
+  function remove_index(idx:Number) {
+    var real_idx = revert_paged_index(idx)
+    switch (location) {
+      case Browser.BROWSING_ALBUMS:
+        var tracks = collection.get_tracks_from_album(real_idx)
+        playlist.remove_tracks(tracks)
+      break
+    }
   }
 
   function notify_on_page_change(listener:Object) {
@@ -31,7 +53,11 @@ class Browser {
   }
 
   function now_browsing():String {
-    return 'Albums'
+    switch (location) {
+      case Browser.BROWSING_ALBUMS:
+        return "Albums"
+      break
+    }
   }
 
   function next_page() {
