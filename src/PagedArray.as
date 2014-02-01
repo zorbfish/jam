@@ -28,7 +28,7 @@ class PagedArray {
   }
 
   function next_page(target:Array):Boolean {
-    if (page > page_count) {
+    if (page >= page_count) {
       return false
     }
     slice_into(target, ++page)
@@ -36,7 +36,7 @@ class PagedArray {
   }
 
   function prev_page(target:Array):Boolean {
-    if (page < 0) {
+    if (page <= 0) {
       return false
     }
     slice_into(target, --page)
@@ -51,8 +51,18 @@ class PagedArray {
     var i = page * page_length
     var j = 0
     var end_index = i + page_length
+
+    if (end_index > source.length) {
+      end_index = source.length
+    }
+
     while (i < end_index) {
       target[j++] = source[i++]
+    }
+
+    while (j < page_length) {
+      target.pop()
+      j++
     }
   }
 }
