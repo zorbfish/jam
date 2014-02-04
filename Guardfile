@@ -25,7 +25,7 @@ module ::Guard
   private
 
     def all_tests
-      Dir.glob('tests/**/*Tests.as').map do |file_name|
+      Dir.glob('test/**/*Tests.as').map do |file_name|
         File.basename(file_name, File.extname(file_name))
       end
     end
@@ -33,7 +33,7 @@ module ::Guard
     def build_swf(case_names)
       return false if case_names.empty?
 
-      includes = '-cp src -cp lib -cp tests'
+      includes = '-cp src -cp lib -cp test'
       input = 'bin/Main.as'
 
       File.open("#{input}", 'w+') do |f|
@@ -81,12 +81,18 @@ BODY
     end
 
     def tests_exist?(case_name)
-      File.exists?("tests/#{case_name}.as")
+      File.exists?("test/#{case_name}.as")
     end
   end
 end
 
-guard :LeanUnit do
+guard :leanunit do
   watch(%r{^src/(.+)\.as$}) { |m| "#{m[1]}Tests" }
-  watch(%r{^tests/(.+Tests)\.as$}) { |m| m[1] } 
+  watch(%r{^test/(.+Tests)\.as$}) { |m| m[1] } 
+end
+
+guard :test do
+  watch(%r{^test/.+_test\.rb$})
+  watch('test/test_helper.rb') { 'test' }
+  watch(%r{^lib/(.+)\.rb$}) { |m| "test/#{m[1]}_test.rb" }
 end
