@@ -60,9 +60,6 @@ class PagedArray {
       target[j++] = source[i++]
     }
 
-    while (j < page_length) {
-      target.pop()
-      j++
-    }
+    target.slice(j, page_length - j)
   }
 }
