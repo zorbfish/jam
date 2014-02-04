@@ -1,11 +1,13 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require 'bundler/setup'
+
 task :test do
   require 'guard'
 
   Guard.setup
-  Guard.guards('leanunit').run_all
+  Guard.plugin('leanunit').run_all
 end
 
 task :build do
