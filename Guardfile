@@ -90,9 +90,3 @@ guard :leanunit do
   watch(%r{^src/(.+)\.as$}) { |m| "#{m[1]}Tests" }
   watch(%r{^test/(.+Tests)\.as$}) { |m| m[1] } 
 end
-
-guard :test do
-  watch(%r{^test/.+_test\.rb$})
-  watch('test/test_helper.rb') { 'test' }
-  watch(%r{^lib/(.+)\.rb$}) { |m| "test/#{m[1]}_test.rb" }
-end

@@ -5,6 +5,6 @@ source "https://rubygems.org"
 
 group :test do
   gem 'fakefs'
-  gem 'guard-test'
-  gem 'shoulda-context'
+  gem 'rspec'
+  gem 'guard-rspec'
 end
