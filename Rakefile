@@ -13,7 +13,7 @@ end
 task :build do
   input = 'src/Main.as'
   output = 'bin/launcher.swf'
-  includes = '-cp src -cp lib -cp tests'
+  includes = '-cp src'
   params = '272:480:10:000000'
 
   sh "mtasc #{includes} -version 7 -swf #{output} -header #{params} -main #{input}"
