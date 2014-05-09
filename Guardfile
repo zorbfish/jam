@@ -33,7 +33,7 @@ module ::Guard
     def build_swf(case_names)
       return false if case_names.empty?
 
-      includes = '-cp src -cp lib -cp test'
+      includes = '-cp src -cp vendor/flash -cp test'
       input = 'bin/Main.as'
 
       File.open("#{input}", 'w+') do |f|
