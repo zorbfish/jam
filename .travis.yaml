@@ -1,0 +1,9 @@
+language: ruby
+
+before_script:
+  sudo apt-get update -qq
+  sudo apt-get install -y mtasc gnash
+  mkdir -p bin vendor/flash
+  git clone git@github.com:zorbfish/leanunit-actionscript2.git vendor/flash
+
+script: bundler exec rake test

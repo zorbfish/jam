@@ -14,8 +14,13 @@ module ::Guard
     end
 
     def run_on_changes(test_names)
-      swf_built = build_swf(test_names.select { |name| tests_exist?(name) })
-      run_tests_and_display_results if swf_built
+      begin
+        swf_built = build_swf(test_names.select { |name| tests_exist?(name) })
+        run_tests_and_display_results if swf_built
+      rescue Exception => error
+        puts error.message
+        false # Flash tests failed
+      end
     end
 
     def run_on_removals(paths)
@@ -49,11 +54,11 @@ BODY
       end
       error =
         `mtasc #{includes} -swf #{output} -header 1:1:24 -main #{input} 2>&1`
-      $?.success? || (puts "Compilation failed: #{error}")
+      $?.success? || (raise "Compilation failed: #{error}")
     end
 
-    def format_print(line)
-      %w{. F}.include?(line) ? print(line) : puts(line)
+    def break_line(line)
+      %w{. F}.include?(line) ? line : line + "\n"
     end
 
     def output
@@ -61,16 +66,27 @@ BODY
     end
 
     def run_tests_and_display_results
-      results = IO.popen("gnash -v #{output}")
+      results = []
+      pipe = IO.popen("gnash -v #{output}")
 
-      results.each do |line|
-        cleaned_line = remove_gnash_verbosity(line)
-        if cleaned_line == 'exit'
-          Process.kill(:SIGTERM, results.pid)
-        else
-          format_print(cleaned_line) unless cleaned_line.nil?
+      begin
+        pipe.each do |line|
+          cleaned_line = remove_gnash_verbosity(line)
+          if cleaned_line == 'exit'
+            raise
+          else
+            results << break_line(cleaned_line) unless cleaned_line.nil?
+          end
         end
+      rescue
+        Process.kill(:SIGTERM, pipe.pid)
       end
+
+      # Fail the build if Flash reported errors, otherwise print to console
+      failures = results[-1].scan(/\d+/)[-1].to_i
+      Kernel.send (failures > 0 ? :raise : :print), results.join
+
+      true # Flash tests passed
     end
 
     def remove_gnash_verbosity(line)

@@ -7,7 +7,8 @@ task :test do
   require 'guard'
 
   Guard.setup
-  Guard.plugin('leanunit').run_all
+  passed = Guard.plugin('leanunit').run_all
+  raise unless passed
 end
 
 task :build do

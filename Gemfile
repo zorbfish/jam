@@ -6,5 +6,6 @@ source "https://rubygems.org"
 group :test do
   gem 'fakefs'
   gem 'rspec'
+  gem 'guard'
   gem 'guard-rspec'
 end
