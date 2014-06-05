@@ -6,6 +6,6 @@ before_script:
 - mkdir -p bin vendor/flash
 - git clone http://github.com/zorbfish/leanunit-actionscript2.git vendor/flash
 - "export DISPLAY=:99.0"
-- "sh -e /etc/init.d/xfvb start"
+- "sh -e /etc/init.d/xvfb start"
 
 script: bundle exec rake test
