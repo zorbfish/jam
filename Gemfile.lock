@@ -52,5 +52,6 @@ PLATFORMS
 
 DEPENDENCIES
   fakefs
+  guard
   guard-rspec
   rspec
